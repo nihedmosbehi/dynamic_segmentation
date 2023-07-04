@@ -1,36 +1,10 @@
 import datetime
-import math
-import string
-import gensim
 import nltk
-import pandas as pd
 import preprocess_data as preprocess_data
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('punkt')
-import re
-from gensim import corpora
-from nltk.corpus import stopwords
-from wordcloud import WordCloud
-from matplotlib import pyplot as plt
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
 import numpy as np
-
-
-#data preprocessing : correct the wrong sentences in english, remove the stop words and punctuation, tokenize the sentences after getting the from the document, convert into lower cased
-#text blob corrects english sentences
-#a service for data preprocessing and then service for dynamic segmentation and topic modeling
-
-# def data_preprocessing(data):
-#     data = data.lower()
-#     data = re.sub(r'\d+', '', data)
-#     data = data.translate(str.maketrans('', '', string.punctuation))
-#     data = data.strip()
-#     data = data.split()
-#     data = [word for word in data if word not in stopwords.words('english')]
-#     data = [word for word in data if len(word) > 2]
-
 
 #Todo: change the dummy data with real data that will get preprocessed
 data = [
@@ -125,11 +99,9 @@ def retrieve_documents_between_time_period(data, x1, x2):
     return documents
 
 
-#Todo: to be checked if it works correctly or not
 def apply_LDA(window,num_topics):
     return preprocess_data.apply_lda_model([data[1] for data in window], num_topics)
 
-#Todo: to be checked if it works correctly or not
 def calculate_contingency_matrix(data1, data2, num_topics):
     topics_words_seg1 = apply_LDA(data1, num_topics)
     topics_words_seg2 = apply_LDA(data2, num_topics)
@@ -142,7 +114,6 @@ def calculate_contingency_matrix(data1, data2, num_topics):
                 if(topics_words_seg1[i][k] in topics_words_seg2[j]):
                     contingency_matrix[i][j] += 1
     return contingency_matrix
-#Todo: to be checked if it works correctly or not
 def calculate_objective_function(contingency_matrix):
     r, c = contingency_matrix.shape
     u_C = np.full(c, 1 / c)
@@ -167,7 +138,6 @@ def calculate_objective_function(contingency_matrix):
     return F
 
 
-#Todo: should be tested if it works correctly or not
 def perform_segmentation_with_timestamps(data, x, y):
     segments = []
     T = [datetime.datetime.strptime(d[0], '%Y-%m-%d %H:%M:%S') for d in data]
